@@ -39,16 +39,17 @@ router.get('/eko', async function(req, res, next) {
 router.get('/eko/callback', async function(req, res, next) {
   try {
     // Make sure it is the callback from what we have initiated
+    // Get redirectTo from state
     const state = req.query.state || '';
+    const stateMap = req.session.stateMap || {};
+    const redirectTo = stateMap[state];
+    if (!redirectTo) throw new Error('State is mismatch');    
+    delete stateMap[state];
+    req.session.stateMap = stateMap;
+    
     const { client, data } = await clientOauth.code.getToken(req.originalUrl, { state });
     const user = JWT.decode(data.id_token);
     req.session.user = user;
-
-    // Get redirectTo from state
-    const stateMap = req.session.stateMap || {};
-    const redirectTo = stateMap[state] || 'https://sso.pud.local/error';
-    delete stateMap[state];
-    req.session.stateMap = stateMap;
 
     res.redirect(redirectTo);
   } catch (error) {
