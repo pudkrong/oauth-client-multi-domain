@@ -23,7 +23,7 @@ app.use(session({
   secret: 'My Super Secret',
   saveUninitialized: false,
   resave: true,
-  cookie: { domain: 'pud.local', httpOnly: true }
+  cookie: { domain: process.env.COOKIE_DOMAIN, httpOnly: true }
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 

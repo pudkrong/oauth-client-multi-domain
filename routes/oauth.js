@@ -63,7 +63,7 @@ router.get('/test', async (req, res, next) => {
     res.end(`Hello ${req.session.user.firstname || req.session.user.name}`);
   } else {
     const redirectTo = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-    res.redirect(`http://sso.pud.local:3001/connect/eko?redirectTo=${redirectTo}`);
+    res.redirect(`${process.env.DOMAIN}/connect/eko?redirectTo=${redirectTo}`);
   }
 });
 
